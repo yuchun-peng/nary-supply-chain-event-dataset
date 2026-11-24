@@ -1,0 +1,543 @@
+TASK
+
+Extract structured N-ary events from natural-language SEC 10-K text.
+
+Each extracted event must be explicit, meaningful, and traceable
+to the source text.
+
+Event-specific definitions and role requirements are provided
+separately by the corresponding event schema.
+
+
+1. CORE N-ARY STRUCTURE
+
+Each event represents one main relation:
+
+subject + relation + object
+
+Every event MUST contain:
+
+event_type
+subject
+subject_type
+relation
+object
+object_type
+
+Additional semantic roles may be included when explicitly
+supported by the source text.
+
+
+2. GENERAL ANNOTATION RULES
+
+1. Each N-ary event should represent ONE main piece of information.
+
+2. relation should preserve the main verb or verb phrase expressed
+   in the source text as closely as possible.
+
+3. event_type represents the broader semantic meaning of the event.
+
+4. Determine event_type from the complete event meaning, including:
+
+   - subject
+   - relation
+   - object
+   - additional semantic roles
+   - surrounding textual context
+
+5. Do NOT determine event_type from verb matching alone.
+
+6. Different relations may belong to the same event type when they
+   express the same underlying semantic event.
+
+7. Every extracted fact must be supported by the source text.
+
+8. Do not invent unsupported entities, relations, roles, values,
+   causes, purposes, agents, or other information.
+
+9. Information may be normalized only when it is explicitly and
+   unambiguously resolvable from the source text.
+
+10. Do not replace an explicitly stated source relation with a more
+    typical relation merely because it is common for the event type.
+
+11. Passive voice must preserve the correct semantic direction.
+    Do not invent an unstated agent.
+
+12. Extract explicit and meaningful events rather than omitting
+    them unnecessarily.
+
+
+3. EVENT SEPARATION
+
+1. If a sentence contains multiple independent actions,
+   extract them as separate N-ary events.
+
+Example:
+
+"We design, build and sell vehicles."
+
+should normally produce separate events for:
+
+design
+build
+sell
+
+
+2. If the same relation applies to multiple independent objects,
+   create a separate event for each object.
+
+Example:
+
+"A supplies products C and D."
+
+should normally produce:
+
+A supplies C
+A supplies D
+
+
+3. Do not combine multiple independent products, materials,
+   companies, technologies, facilities, or other entities into
+   one object when each can independently form an event.
+
+4. One sentence or text chunk may therefore contain zero, one,
+   or multiple N-ary events.
+
+
+4. REFERENCE RESOLUTION
+
+When the filing company is explicitly identifiable, references such as:
+
+we
+our
+us
+ourselves
+the Company
+
+should be normalized to the filing company's full name when they
+clearly refer to the filing company.
+
+ORG is document-relative.
+
+Only the SEC filing company itself may be labeled ORG.
+
+Do not automatically assign the filing company as the subject.
+
+Official operating segments or formally disclosed business units
+must be labeled SEGMENT.
+
+External companies, subsidiaries, joint ventures, suppliers,
+customers, government agencies, regulators, unions and other
+formal organizations must be labeled COMP.
+
+Do not resolve a reference when its antecedent is ambiguous.
+
+Do not invent an entity name that cannot be determined from
+the source text or supplied context.
+
+
+5. ENTITY TYPES
+
+Use ONLY the following entity types.
+
+
+ORG
+
+Only the SEC filing company itself.
+
+Examples:
+
+General Motors Company in a GM filing
+Ford Motor Company in a Ford filing
+Lear Corporation in a Lear filing
+
+
+------------------------------------------------------------
+
+COMP
+
+External formal organizations appearing in the filing.
+
+This includes external companies, subsidiaries, joint ventures,
+competitors, suppliers, customers, partners, government agencies,
+regulators, unions, associations and other formal organizations.
+
+Examples:
+
+EVgo
+Panasonic
+European Commission
+United Auto Workers
+
+
+------------------------------------------------------------
+
+PERSON
+
+Named people or explicitly identified individual positions.
+
+Examples:
+
+Mary Barra
+Chief Executive Officer
+
+
+------------------------------------------------------------
+
+PRODUCT
+
+Physical or commercial products, components, vehicles,
+equipment or product offerings.
+
+Examples:
+
+vehicles
+seat systems
+battery cells
+axles
+controllers
+
+
+------------------------------------------------------------
+
+TECHNOLOGY
+
+Software, technical systems, platforms, AI capabilities,
+algorithms, technical architectures, digital systems
+and other technological capabilities.
+
+Examples:
+
+artificial intelligence
+vehicle software
+autonomous driving system
+battery management software
+IT security system
+
+
+------------------------------------------------------------
+
+MATERIAL
+
+Raw materials, energy resources, chemicals, commodities,
+minerals or natural resources used in production or operations.
+
+Examples:
+
+steel
+aluminum
+lithium
+rubber
+electricity
+
+
+------------------------------------------------------------
+
+FACILITY
+
+Factories, manufacturing plants, research centers,
+warehouses, offices, charging infrastructure,
+or other physical facilities and infrastructure.
+
+Examples:
+
+AMP-1
+Normal plant
+development center
+charging network
+
+
+------------------------------------------------------------
+
+LOCATION
+
+Countries, regions, cities, states, geographic areas,
+or geographic markets.
+
+Examples:
+
+China
+Europe
+United States
+Ohio
+
+
+------------------------------------------------------------
+
+SEGMENT
+
+Official operating segments, divisions, business units,
+or formally disclosed organizational segments.
+
+Examples:
+
+GM North America
+GM International
+Seating
+E-Systems
+
+
+------------------------------------------------------------
+
+REGULATION
+
+Laws, regulations, formal rules, standards, permits,
+certifications and formal regulatory requirements.
+
+Examples:
+
+GDPR
+Inflation Reduction Act
+emissions regulations
+ISO standards
+
+
+------------------------------------------------------------
+
+AGREEMENT
+
+Contracts, warranties, leases, supply agreements,
+credit agreements, guarantees, licenses and other
+formal arrangements.
+
+Examples:
+
+supply agreement
+warranty
+lease agreement
+credit facility
+
+
+------------------------------------------------------------
+
+IMPACT_EVENT
+
+An actual or potential situation, disruption, risk source,
+or adverse event affecting operations, supply chains,
+production, sales, costs or markets.
+
+Examples:
+
+semiconductor shortage
+labor strike
+cyberattack
+natural disaster
+
+
+------------------------------------------------------------
+
+METRIC_VALUE
+
+Amounts, quantities, percentages, capacities,
+financial values, operational measurements,
+or other quantitative values.
+
+Examples:
+
+$188 million
+15%
+39,600 employees
+150,000 units per year
+
+
+------------------------------------------------------------
+
+TIME
+
+Explicit dates, years, periods, quarters,
+deadlines or other temporal expressions.
+
+Examples:
+
+2024
+December 31, 2024
+third quarter
+2030
+
+
+------------------------------------------------------------
+
+OTHER
+
+Entities that do not fit any other allowed entity type.
+
+Use OTHER rather than forcing an entity into an
+incorrect type.
+
+
+6. EVENT TYPE SELECTION
+
+The event-type schema is CLOSED.
+
+Use ONLY the event types explicitly supported
+by the current experiment.
+
+Do NOT create new event types.
+
+Determine the event type from the semantic meaning
+of the complete event rather than relation wording alone.
+
+Do not force an unsupported event into the closest
+supported event family.
+
+If a meaningful event does not fit any supported
+event type, classify it as OTHER at the classification stage.
+
+
+7. MODAL, FUTURE AND REALIZED EVENTS
+
+Distinguish carefully between realized events and
+hypothetical or future consequences.
+
+Statements containing:
+
+may
+could
+might
+if
+potentially
+possible
+would
+
+must NOT automatically be treated as realized events.
+
+Example:
+
+"A supplier shortage could halt production."
+
+The production halt has not occurred.
+
+Do NOT extract it as a realized Production event.
+
+
+Example:
+
+"Supplier shortages caused production shutdowns."
+
+The impact actually occurred.
+
+
+Planned or expected actions may still be extracted
+when the action itself is explicitly intended.
+
+Example:
+
+"We plan to begin production in 2027."
+
+This may be extracted as a Production event with:
+
+event_status = planned
+
+
+8. NEGATION
+
+Do NOT convert an explicitly negated statement
+into a positive event.
+
+Example:
+
+"We have not experienced material shortages."
+
+Do NOT extract a shortage event.
+
+
+Example:
+
+"No legal action has been initiated."
+
+Do NOT extract a litigation event.
+
+
+9. ADDITIONAL N-ARY ROLES
+
+In addition to the six required core fields:
+
+event_type
+subject
+subject_type
+relation
+object
+object_type
+
+additional semantic roles may be included when explicitly
+supported by the source text.
+
+Possible roles include, but are not limited to:
+
+time
+location
+partner
+partner_with
+supplier
+customer
+brand
+market
+purpose
+application
+condition
+event_status
+quantity
+production_volume
+capacity
+through
+technology
+agreement
+regulation
+operating_segment
+
+Additional roles are dynamic.
+
+Use the event-specific schema to identify roles that are
+particularly relevant to the current event type.
+
+Do not add a role when its information is not supported
+by the source text.
+
+
+10. EVENT STATUS
+
+When explicitly supported or clearly indicated by the source text,
+event_status may be:
+
+ongoing
+planned
+expected
+possible
+conditional
+unknown
+
+Do not use any other event_status value.
+
+Do not assign a more certain status than the source text supports.
+
+
+11. FINAL VALIDATION
+
+Before returning each N-ary event, verify that:
+
+1. It represents one meaningful event.
+
+2. The event is supported by the source text.
+
+3. The relation preserves the source action or state.
+
+4. The subject and object are clearly identified.
+
+5. subject_type and object_type use an allowed entity type.
+
+6. ORG is used only for the filing company.
+
+7. Independent actions are separated.
+
+8. Independent objects are separated.
+
+9. Negated statements have not been converted into positive events.
+
+10. Hypothetical consequences have not been converted into realized events.
+
+11. Useful semantic modifiers are preserved as additional roles.
+
+12. event_type reflects the complete semantic meaning of the event.
+
+13. No unsupported information has been added.

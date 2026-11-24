@@ -1,0 +1,1274 @@
+TASK
+
+Identify all meaningful event statements expressed in the SEC 10-K text
+and classify each event into one event family.
+
+A text chunk may contain:
+
+- zero events
+- one event
+- multiple events
+- multiple different event families
+
+Identify semantically distinct events separately.
+
+Do NOT perform full N-ary extraction in this step.
+
+Do NOT extract:
+
+- subject
+- subject_type
+- relation
+- object
+- object_type
+- additional semantic roles
+
+Those tasks are handled by later nodes.
+
+
+1. EVENT FAMILIES
+
+
+Competition
+
+A Competition event describes an actual competitive relationship,
+competitor identity, competitive comparison, competitive pressure,
+or competitive advantage or disadvantage relative to another
+market participant, competing product, or competing offering.
+
+Examples:
+
+"Our primary competitors include Company A and Company B."
+
+→ Competition
+
+
+"Our technology has significant performance advantages over
+competing products."
+
+→ Competition
+
+
+"We face increasing competition from Chinese manufacturers."
+
+→ Competition
+
+
+Do NOT classify a sentence as Competition merely because words such as:
+
+competition
+competitive
+competitor
+
+appear.
+
+
+A generic market-position statement such as:
+
+"we are a global leader"
+"we are a leading supplier"
+"we hold a strong market position"
+
+does NOT by itself establish a Competition event.
+
+
+Customer relationships, supplier relationships, partnerships,
+market presence, or broad industry leadership are not Competition
+unless the source explicitly describes a competitive relationship,
+comparison, pressure, advantage, disadvantage, or competitor.
+
+
+Example:
+
+"Adient maintains longstanding relationships with major OEMs."
+
+→ OTHER or no event
+
+
+Example:
+
+"Adient is a global leader in automotive seating."
+
+→ OTHER or no event
+
+
+------------------------------------------------------------
+
+
+Production
+
+A Production event describes production activity when the
+main semantic focus is production OUTPUT, VOLUME, CAPACITY,
+SCALE, STATUS, LEVEL, CHANGE, SHARE, or TIMING.
+
+Production is OUTPUT-CENTERED.
+
+Typical semantic questions answered by a Production event include:
+
+- What is produced?
+- How much is produced?
+- What production capacity exists or is planned?
+- Where is it produced?
+- When does production begin?
+- Did production increase or decrease?
+- What production level was reached?
+- What share of production is represented?
+
+Examples:
+
+"Approximately 93 million vehicles were produced in 2023."
+
+→ Production
+
+
+"The plant produced 500,000 tons of copper in 2024."
+
+→ Production
+
+
+"Steel production in Japan decreased."
+
+→ Production
+
+
+"The facility began commercial production."
+
+→ Production
+
+
+"The plant has annual production capacity of 150,000 units."
+
+→ Production
+
+
+A reporting attribution does not change the event family.
+
+Example:
+
+"According to Association X, approximately 93 million vehicles
+were produced in 2023."
+
+→ Production
+
+Association X is the reporting source.
+The underlying event is still Production.
+
+
+Do NOT classify a statement as Production merely because the words:
+
+production
+produce
+producer
+capacity
+
+appear.
+
+
+A hypothetical adverse consequence is NOT a Production event.
+
+Example:
+
+"A supplier shortage could halt production."
+
+→ OTHER
+
+The production halt has not occurred.
+
+
+A planned or expected production action may still be Production.
+
+Example:
+
+"We plan to begin production in 2027."
+
+→ Production
+
+
+------------------------------------------------------------
+
+
+Supply
+
+A Supply event describes the actual FLOW, DELIVERY, SHIPMENT,
+DISTRIBUTION, or PROVISION of a PHYSICAL product, component,
+material, commodity, or other good from one entity to another party.
+
+The central meaning is that physical goods move or are provided
+to a customer, recipient, destination, or downstream party.
+
+Examples:
+
+"We deliver battery modules to our customers."
+
+→ Supply
+
+
+"We supply seat systems to automotive manufacturers."
+
+→ Supply
+
+
+"We ship components to assembly plants."
+
+→ Supply
+
+
+Supply is different from Service_Provision.
+
+Compare:
+
+"We deliver physical battery modules to customers."
+
+→ Supply
+
+
+"We provide logistics services to customers."
+
+→ Service_Provision
+
+
+A statement describing only selling, marketing,
+commercialization, pricing, revenue, or customer demand
+is NOT Supply.
+
+Example:
+
+"We sell vehicles to customers."
+
+→ OTHER
+
+when Sales is not supported in the current experiment.
+
+
+Do NOT classify expressions such as:
+
+"supply chain solutions"
+"supply chain management"
+"supply chain planning"
+
+as Supply unless the text actually describes physical goods
+being supplied, delivered, shipped, or distributed.
+
+
+A hypothetical inability to deliver goods is not a realized
+Supply event.
+
+Example:
+
+"A natural disaster may prevent us from delivering products."
+
+→ OTHER
+
+
+------------------------------------------------------------
+
+
+Acquisition
+
+An Acquisition event describes a transaction in which an entity
+acquires, purchases, exchanges for, takes control of, or otherwise
+obtains another company, business, segment, facility, major asset,
+or ownership interest.
+
+The central meaning is the acquisition transaction itself.
+
+Examples:
+
+"We completed the acquisition of Stelco."
+
+→ Acquisition
+
+
+"We acquired the automotive business of Company A."
+
+→ Acquisition
+
+
+"We plan to acquire Company B."
+
+→ Acquisition
+
+
+Do NOT classify ordinary procurement or purchasing of materials,
+components, inventory, products, or services for normal operations
+as Acquisition.
+
+
+Do NOT classify generic or static ownership statements as Acquisition.
+
+Example:
+
+"We own 50% of Joint Venture A."
+
+→ OTHER
+
+when Equity_Ownership is not supported in the current experiment.
+
+
+Do NOT classify a trade-in purchase or routine purchase of a product
+as Acquisition merely because the verb "acquire" or "purchase" appears.
+
+
+A strategic, operational, financial, or market effect caused by
+an acquisition is not automatically another Acquisition event.
+
+Classify the effect according to its own semantic meaning.
+
+If the appropriate family is not supported in the current experiment,
+classify the effect as OTHER.
+
+
+------------------------------------------------------------
+
+
+Product_Portfolio
+
+A Product_Portfolio event describes WHAT products, product lines,
+product types, commodities, or commercial offerings are included
+in a company's or segment's current or expected portfolio.
+
+The central meaning is portfolio COMPOSITION rather than
+production activity, technology use, or product development.
+
+Examples:
+
+"Our product portfolio includes Product A and Product B."
+
+→ Product_Portfolio
+
+
+"Our major products include copper, molybdenum, zinc and silver."
+
+→ Product_Portfolio
+
+
+"The segment offers axles and driveshafts."
+
+→ Product_Portfolio
+
+
+Compare:
+
+"Our products include copper and zinc."
+
+→ Product_Portfolio
+
+
+"We produced 500,000 tons of copper."
+
+→ Production
+
+
+"We refine copper ore into concentrate."
+
+→ Manufacturing
+
+
+"We use artificial intelligence in our operations."
+
+→ OTHER
+
+when Technology is not supported in the current experiment.
+
+
+"We are developing a new battery platform."
+
+→ Development
+
+
+Do NOT classify a portfolio statement as Production merely
+because words such as "produce" or "production" appear.
+
+
+Do NOT classify raw-material use as Product_Portfolio.
+
+Example:
+
+"We use steel and aluminum in production."
+
+→ OTHER
+
+when Raw_Material_Use is not supported in the current experiment.
+
+
+------------------------------------------------------------
+
+
+Service_Provision
+
+A Service_Provision event describes the actual provision,
+delivery, performance, maintenance, installation, support,
+repair, or access to a NON-PHYSICAL service or service activity
+for a customer, user, recipient, or other external party.
+
+Services may include:
+
+- technical services
+- procurement support
+- warehousing services
+- logistics services
+- maintenance services
+- repair services
+- installation services
+- customer support
+- access to a service network
+- other non-physical service activities
+
+Examples:
+
+"We provide logistics services to customers."
+
+→ Service_Provision
+
+
+"We provide maintenance and repair services."
+
+→ Service_Provision
+
+
+"Customers receive access to the charging network."
+
+→ Service_Provision
+
+
+Service_Provision is different from Supply.
+
+Physical goods provided to another party:
+
+→ Supply
+
+Non-physical services or support provided to another party:
+
+→ Service_Provision
+
+
+Internal workforce activities are NOT Service_Provision.
+
+Examples:
+
+"We provide employee training."
+
+→ OTHER
+
+
+"We offer leadership development programs to employees."
+
+→ OTHER
+
+when Workforce is not supported in the current experiment.
+
+
+Do NOT classify generic product benefits or capabilities as
+Service_Provision merely because the verb "provide" appears.
+
+
+------------------------------------------------------------
+
+
+Manufacturing
+
+A Manufacturing event describes an actual manufacturing,
+processing, fabrication, assembly, refining, milling, smelting,
+or other physical transformation process.
+
+Manufacturing is PROCESS-CENTERED.
+
+The central meaning concerns HOW a material, component, or
+product is made, processed, transformed, assembled, refined,
+or fabricated.
+
+Examples:
+
+"The company manufactures semiconductor devices."
+
+→ Manufacturing
+
+
+"The operation mills and floats copper ore."
+
+→ Manufacturing
+
+
+"The facility processes ore into concentrate."
+
+→ Manufacturing
+
+
+"The products are fabricated using third-party wafer fabs."
+
+→ Manufacturing
+
+
+Manufacturing is different from Production.
+
+Compare:
+
+"The plant produced 500,000 tons of concentrate."
+
+→ Production
+
+because the focus is output and volume.
+
+
+"The plant processed ore into concentrate."
+
+→ Manufacturing
+
+because the focus is transformation and process.
+
+
+Testing performed as part of research, engineering validation,
+product development, or technology development belongs to Development.
+
+Example:
+
+"We test new battery designs."
+
+→ Development
+
+
+Testing may be Manufacturing only when the source explicitly
+describes testing as part of a routine manufacturing,
+production, or quality-control process.
+
+
+General production statistics are normally Production,
+not Manufacturing.
+
+Do NOT duplicate the same proposition as both Production and
+Manufacturing merely because both interpretations are possible.
+
+Use the main semantic focus of the proposition.
+
+
+A hypothetical inability to manufacture is not a realized
+Manufacturing event.
+
+Example:
+
+"A natural disaster could prevent us from manufacturing products."
+
+→ OTHER
+
+
+------------------------------------------------------------
+
+
+Development
+
+A Development event describes research, creation, design,
+engineering, testing, development, advancement, or improvement
+of a product, technology, system, solution, method, or
+technical capability.
+
+Development focuses on CREATION or ADVANCEMENT rather than
+routine production, manufacturing, technology use, or
+facility construction.
+
+Examples:
+
+"The company develops inert anode technology."
+
+→ Development
+
+
+"The partnership advances development of a new smelting technology."
+
+→ Development
+
+
+"We design a new semiconductor technology."
+
+→ Development
+
+
+"We test new battery designs."
+
+→ Development
+
+
+Compare:
+
+"We manufacture semiconductor devices."
+
+→ Manufacturing
+
+
+"We produced 10,000 semiconductor devices."
+
+→ Production
+
+
+"We use artificial intelligence in manufacturing."
+
+→ OTHER
+
+when Technology is not supported in the current experiment.
+
+
+Do NOT classify routine manufacturing as Development.
+
+Do NOT classify production volume as Development.
+
+Do NOT classify simple use, adoption, deployment, or integration
+of an existing technology as Development unless the source also
+states that the company develops, designs, engineers, tests,
+creates, or improves that technology.
+
+
+Building, opening, expanding, converting, upgrading, or relocating
+a physical facility is NOT Development.
+
+Example:
+
+"The company will design and build a processing facility."
+
+→ OTHER
+
+when the central event is Facility_Development and that family
+is not currently supported.
+
+
+Do not classify establishment of a company, joint venture,
+committee, council, office, or other organization as Development.
+
+
+------------------------------------------------------------
+
+
+OTHER
+
+Use OTHER when the text expresses a meaningful EVENT but the event
+does not belong to any currently supported family:
+
+Competition
+Production
+Supply
+Acquisition
+Product_Portfolio
+Service_Provision
+Manufacturing
+Development
+
+
+Examples of meaningful events that may currently be OTHER include:
+
+- Procurement
+- Raw_Material_Use
+- Technology
+- Product_Launch
+- Discontinuation
+- Facility_Development
+- Investment
+- Collaboration
+- Divestiture
+- Agreement
+- Financing
+- Corporate_Formation
+- Corporate_Restructuring
+- Regulatory_Event
+- Workforce
+- Operational_Impact
+- Risk
+- Seasonality
+- Equity_Ownership
+- Litigation
+- Recall
+- Cybersecurity_Incident
+- Strategy_Execution
+- Strategy_Change
+- other unsupported meaningful event types
+
+
+Do NOT force an unsupported event into the closest supported family.
+
+
+Example:
+
+"The company was awarded a contract to build a facility."
+
+may contain meaningful Agreement and Facility_Development events.
+
+→ OTHER
+
+
+Example:
+
+"We use lithium in battery production."
+
+→ OTHER
+
+when Raw_Material_Use is not supported.
+
+
+Example:
+
+"We deployed artificial intelligence in our operations."
+
+→ OTHER
+
+when Technology is not supported.
+
+
+OTHER is used only for meaningful events.
+
+Do NOT use OTHER merely to preserve every descriptive statement.
+
+
+Purely static, descriptive, background, identity, headquarters,
+location, organizational, market-position, or market-description
+facts may produce no event when they do not express meaningful
+event semantics.
+
+
+Examples:
+
+"Our headquarters are in Ohio."
+
+→ no event
+
+
+"We operate in 30 countries."
+
+→ no event
+
+when the statement is only a static geographic description.
+
+
+"We are a leading supplier."
+
+→ no event
+
+when the statement only describes market position.
+
+
+2. IMPORTANT FAMILY BOUNDARIES
+
+Use the COMPLETE SEMANTIC MEANING of the proposition.
+
+Do NOT classify only from a keyword or verb.
+
+
+PRODUCTION vs MANUFACTURING
+
+Production:
+
+focuses on output, volume, capacity, production level,
+production status, production timing, production change,
+or production share.
+
+Manufacturing:
+
+focuses on manufacturing method, processing, fabrication,
+assembly, refining, or physical transformation.
+
+
+Example:
+
+"93 million vehicles were produced."
+
+→ Production
+
+
+"Vehicles are assembled at the facility."
+
+→ Manufacturing
+
+
+------------------------------------------------------------
+
+
+PRODUCTION vs PRODUCT_PORTFOLIO
+
+Production:
+
+reports actual production activity, capacity, status, level,
+output, volume, timing, or change.
+
+Product_Portfolio:
+
+identifies what products, product lines, product types,
+commodities, or commercial offerings belong to the company's
+or segment's portfolio.
+
+
+Example:
+
+"The company produced 10 million pounds of copper."
+
+→ Production
+
+
+"The company's major products include copper and zinc."
+
+→ Product_Portfolio
+
+
+------------------------------------------------------------
+
+
+SUPPLY vs SERVICE_PROVISION
+
+Supply:
+
+physical goods flow to another party.
+
+Service_Provision:
+
+non-physical service or support is provided to another party.
+
+
+Example:
+
+"We deliver electronic controllers to customers."
+
+→ Supply
+
+
+"We provide logistics services to customers."
+
+→ Service_Provision
+
+
+------------------------------------------------------------
+
+
+SUPPLY vs SALES
+
+Supply:
+
+physical delivery, shipment, distribution, or supply
+of goods to another party.
+
+Sales:
+
+selling, marketing, commercialization, pricing,
+revenue, or customer purchasing activity.
+
+
+Example:
+
+"We ship seats to customers."
+
+→ Supply
+
+
+"We sell seats to customers."
+
+→ OTHER
+
+when Sales is not currently supported.
+
+
+------------------------------------------------------------
+
+
+DEVELOPMENT vs MANUFACTURING
+
+Development:
+
+research, creation, design, engineering, testing,
+advancement, or improvement of a product, technology,
+system, method, or capability.
+
+Manufacturing:
+
+actual fabrication, processing, assembly, refining,
+or physical manufacturing activity.
+
+
+Example:
+
+"We design intelligent power technology."
+
+→ Development
+
+
+"We manufacture intelligent power devices."
+
+→ Manufacturing
+
+
+------------------------------------------------------------
+
+
+DEVELOPMENT vs TECHNOLOGY
+
+Development:
+
+the company creates, designs, engineers, tests,
+develops, advances, or improves a technology.
+
+Technology:
+
+the company uses, adopts, deploys, integrates,
+or operates an existing technology.
+
+
+Example:
+
+"We develop an AI-based control system."
+
+→ Development
+
+
+"We use AI in our manufacturing operations."
+
+→ OTHER
+
+when Technology is not currently supported.
+
+
+------------------------------------------------------------
+
+
+DEVELOPMENT vs FACILITY DEVELOPMENT
+
+Developing a technology, product, system, method,
+or technical capability:
+
+→ Development
+
+
+Building, opening, expanding, converting, upgrading,
+or relocating a physical factory, mine, processing plant,
+research center, or other facility:
+
+→ OTHER
+
+when Facility_Development is not currently supported.
+
+
+------------------------------------------------------------
+
+
+ACQUISITION vs PROCUREMENT
+
+Acquisition:
+
+obtaining ownership or control of a company,
+business, segment, facility, major asset,
+or ownership interest.
+
+Procurement:
+
+obtaining materials, components, products,
+inventory, or services for ordinary operations.
+
+
+Example:
+
+"We acquired Company A."
+
+→ Acquisition
+
+
+"We purchased aluminum from suppliers."
+
+→ OTHER
+
+when Procurement is not currently supported.
+
+
+------------------------------------------------------------
+
+
+ACQUISITION vs EQUITY OWNERSHIP
+
+An acquisition transaction that obtains an ownership interest:
+
+→ Acquisition
+
+
+A static statement describing an ownership position:
+
+→ OTHER
+
+when Equity_Ownership is not currently supported.
+
+
+Example:
+
+"We acquired a 40% interest in Company A."
+
+→ Acquisition
+
+
+"We own 40% of Company A."
+
+→ OTHER
+
+
+------------------------------------------------------------
+
+
+PRODUCT_PORTFOLIO vs RAW MATERIAL USE
+
+Product_Portfolio:
+
+describes products or commercial offerings belonging
+to the company or segment portfolio.
+
+Raw_Material_Use:
+
+describes materials used, required, consumed,
+or relied upon in production or operations.
+
+
+Example:
+
+"Our products include battery cells."
+
+→ Product_Portfolio
+
+
+"We use lithium to manufacture battery cells."
+
+→ OTHER
+
+when Raw_Material_Use is not currently supported.
+
+
+3. HYPOTHETICAL, RISK, AND NEGATED STATEMENTS
+
+A hypothetical adverse consequence must NOT be classified
+as a supported realized event merely because it mentions
+production, supply, manufacturing, development, acquisition,
+or another supported family.
+
+
+Statements containing expressions such as:
+
+may
+could
+might
+if
+potentially
+possible
+would
+
+require careful interpretation.
+
+
+Example:
+
+"A supplier shortage could halt production."
+
+→ OTHER
+
+The production halt has not occurred.
+The underlying event is a Risk event, which is not supported
+in the current experiment.
+
+
+Example:
+
+"A natural disaster may prevent us from delivering products."
+
+→ OTHER
+
+Do NOT classify this as Supply.
+
+
+Example:
+
+"Component shortages caused production shutdowns."
+
+The adverse impact actually occurred.
+
+Do not treat the shutdown as hypothetical.
+
+
+Planned or expected actions are different from hypothetical risks.
+
+Example:
+
+"We plan to begin production in 2027."
+
+→ Production
+
+because beginning production is an explicitly intended action.
+
+
+Example:
+
+"We expect to acquire Company A next year."
+
+→ Acquisition
+
+
+Do NOT convert explicitly negated statements into positive events.
+
+
+Example:
+
+"We have not experienced material shortages."
+
+Do NOT extract a shortage event.
+
+
+Example:
+
+"We did not acquire Company A."
+
+Do NOT classify this as Acquisition.
+
+
+4. MULTIPLE EVENTS
+
+1. Identify every SEMANTICALLY DISTINCT meaningful event.
+
+2. One sentence may contain multiple event families.
+
+Example:
+
+"We design, manufacture, and deliver intelligent power products
+to customers."
+
+contains three meaningful events:
+
+- Development
+- Manufacturing
+- Supply
+
+
+3. Do not merge distinct actions simply because they occur in the
+same sentence or paragraph.
+
+
+4. A coordinated list of multiple objects does NOT need to be split
+into separate object-level candidates in this classification step.
+
+A later Atomic Splitter node is responsible for splitting lists.
+
+Example:
+
+"Our competitors include Company A, Company B, and Company C."
+
+At this stage, one broad Competition candidate is sufficient.
+
+The later Atomic Splitter will create separate candidates for:
+
+Company A
+Company B
+Company C
+
+
+5. The same applies to coordinated:
+
+- products
+- competitors
+- materials
+- services
+- customers
+- recipients
+- locations
+- acquisition targets
+
+Do not spend this classification step performing detailed
+object-level splitting.
+
+
+5. CLASSIFICATION RULES
+
+1. Identify all semantically distinct meaningful events.
+
+2. Classify each event according to its complete semantic meaning.
+
+3. Do not classify from one keyword or verb alone.
+
+4. Use surrounding context when necessary.
+
+5. Do not force an event into a supported family.
+
+6. Use OTHER only when a meaningful event belongs to an unsupported
+   event type.
+
+7. Purely static or descriptive statements may produce no event.
+
+8. Do not invent events.
+
+9. Every candidate must be traceable to explicit source text.
+
+10. Reporting sources, introductory phrases, or contextual entities
+    should not automatically become event actors.
+
+11. Filing-company context does not mean that every event is
+    performed by the filing company.
+
+12. If one source sentence explicitly expresses several independent
+    actions, preserve those actions as separate event candidates.
+
+13. Do not duplicate one proposition into multiple families merely
+    because several families are superficially plausible.
+
+Choose the family that best represents the proposition's main
+semantic meaning.
+
+14. Do not convert hypothetical adverse consequences into realized
+    supported events.
+
+15. Do not convert negated statements into positive events.
+
+
+6. OUTPUT
+
+Return exactly ONE valid JSON object in the following format:
+
+{
+  "events": [
+    {
+      "event_family": "Competition",
+      "evidence": "exact or concise supporting text span"
+    },
+    {
+      "event_family": "Manufacturing",
+      "evidence": "exact or concise supporting text span"
+    }
+  ]
+}
+
+
+Allowed event_family values are ONLY:
+
+Competition
+Production
+Supply
+Acquisition
+Product_Portfolio
+Service_Provision
+Manufacturing
+Development
+OTHER
+
+
+The "evidence" field should contain the exact or concise
+source-supported statement that most directly supports the event.
+
+Do NOT return:
+
+- event_type beyond event_family
+- subject
+- subject_type
+- relation
+- object
+- object_type
+- additional semantic roles
+
+Those are extracted by later nodes.
+
+
+If no meaningful event is present, return:
+
+{
+  "events": []
+}
+
+
+Return JSON ONLY.
+
+Do not use Markdown.
+
+Do not use code fences.
+
+Do not explain the output.
