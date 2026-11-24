@@ -22,7 +22,7 @@ Each event is represented by an event category, a typed subject–relation–obj
 
 | File | Description |
 | --- | --- |
-| [`all_nary.json`](all_nary.json) | Complete dataset containing 18,362 annotated events across 31 event categories. |
+| [`data/processed/all_nary.json`](data/processed/all_nary.json) | Complete dataset containing 18,362 annotated events across 31 event categories. |
 | [`schemas/annotation_schema.md`](schemas/annotation_schema.md) | Definitions of the 31 event categories and 15 entity types, including examples and possible relation expressions. |
 
 The dataset is distributed as a JSON array, with one annotated event per element. Relations listed in the annotation schema are illustrative rather than an exhaustive set of permitted expressions.
@@ -60,7 +60,7 @@ The following example illustrates the JSON representation; it is not a verbatim 
 ```python
 import json
 
-with open("all_nary.json", "r", encoding="utf-8") as f:
+with open("data/processed/all_nary.json", "r", encoding="utf-8") as f:
     events = json.load(f)
 
 print(f"Number of events: {len(events):,}")
@@ -96,16 +96,18 @@ ollama pull llama3:8b
 
 ### Experimental Runner
 
-[`main.py`](main.py) is the five-seed runner used in Experiment 1 (seeds 41–45). Each run requires 50 passage-level inputs in a corresponding `data/experiments/exp1_dataset_seed*.json` file. These evaluation inputs are separate from the full annotation corpus; `all_nary.json` is not a direct input to this runner.
+[`main.py`](main.py) is the five-seed runner used in Experiment 1 (seeds 41–45). Each run requires 50 passage-level inputs in a corresponding `data/experiments/exp1_dataset_seed*.json` file. These evaluation inputs are separate from the full annotation corpus; `data/processed/all_nary.json` is not a direct input to this runner.
 
 ## Repository Structure
 
 ```text
 .
 ├── README.md
-├── all_nary.json
 ├── main.py
 ├── requirements.txt
+├── data/
+│   └── processed/
+│       └── all_nary.json
 ├── schemas/
 │   ├── annotation_schema.md
 │   ├── core_rules.txt
