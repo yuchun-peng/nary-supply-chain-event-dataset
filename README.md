@@ -1,6 +1,6 @@
 # N-ary Supply Chain Event Dataset
 
-This repository accompanies the paper **"A Curated N-ary Supply Chain Event Dataset: Preliminary Studies on LLM-assisted Extraction Framework"**, accepted at the **KGBigdata 2026 Workshop**, held in conjunction with **IEEE BigData 2026**.
+This repository accompanies the paper "A Curated N-ary Supply Chain Event Dataset: Preliminary Studies on LLM-assisted Extraction Framework", accepted at the KGBigdata 2026 Workshop, held in conjunction with IEEE BigData 2026.
 
 ## Overview
 
