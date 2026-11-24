@@ -1,0 +1,4 @@
+langchain-ollama
+langgraph
+pydantic>=2
+sentence-transformers
